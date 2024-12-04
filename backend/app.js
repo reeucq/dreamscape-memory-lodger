@@ -65,11 +65,11 @@ app.use('/api/analytics', analyticsRouter);
 app.use('/api/advice', adviceRouter);
 
 // Serve static files
-app.use(express.static(path.join(__dirname, '../dist')));
+app.use(express.static('dist')); // or whatever your build directory is
 
 // Handle ALL other routes by serving index.html
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Handle unknown endpoints and errors
