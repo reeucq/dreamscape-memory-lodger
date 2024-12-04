@@ -54,7 +54,7 @@ const Login = ({ setUser, authError, setAuthError }) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
       {(error || authError) && (
         <div className="mb-4 text-red-500 animate-shake">
           {error || authError}

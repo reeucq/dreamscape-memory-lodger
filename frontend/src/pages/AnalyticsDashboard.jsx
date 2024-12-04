@@ -359,7 +359,7 @@ const AnalyticsDashboard = () => {
     );
 
     return (
-      <div className="chart-container p-4 bg-white rounded-lg shadow">
+      <div className="chart-container p-4 bg-white rounded-lg shadow hidden md:block">
         <h3 className="text-lg font-semibold mb-4">Location-Emotion Heatmap</h3>
         <ResponsiveContainer width="100%" height={300}>
           <ComposedChart
@@ -440,7 +440,7 @@ const AnalyticsDashboard = () => {
     };
 
     return (
-      <div className="chart-container p-4 bg-white rounded-lg shadow">
+      <div className="chart-container p-4 bg-white rounded-lg shadow hidden md:block">
         <h3 className="text-lg font-semibold mb-4">
           Trigger-Emotion Correlation
         </h3>
@@ -689,6 +689,9 @@ const AnalyticsDashboard = () => {
             <div className="grid grid-cols-1 mt-6">
               <ActivityEmotionDistributionTable />
             </div>
+          </div>
+          <div className="text-center text-gray-500 p-4 md:hidden">
+            <p>For more charts, visit on a larger screen</p>
           </div>
         </>
       )}

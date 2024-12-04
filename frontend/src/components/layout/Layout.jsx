@@ -30,7 +30,10 @@ const Layout = ({ children, handleLogout }) => {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
-            <Link to="/" className="font-bold text-3xl tracking-wider">
+            <Link
+              to="/"
+              className="font-bold text-lg md:text-2xl lg:text-3xl tracking-wider whitespace-nowrap"
+            >
               DREAMSCAPE MEMORY LODGER
             </Link>
 

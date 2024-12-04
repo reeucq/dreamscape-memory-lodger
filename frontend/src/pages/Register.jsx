@@ -44,7 +44,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-8">
       <div className="max-w-md w-full bg-white p-8 border-2 border-omori-black shadow-omori animate-fade-in">
         <h2 className="text-2xl font-bold mb-6 text-center">
           <span className="inline-block animate-bounce-slow">
