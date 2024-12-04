@@ -1,0 +1,174 @@
+@baseUrl = http://localhost:3001/api
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJlZXVjcXEiLCJpZCI6IjY3NDhjODdhODY1YzA1ZDA4YTQ5NDA2MyIsImlhdCI6MTczMjgyNDkzOSwiZXhwIjoxNzMyODI4NTM5fQ.gvbmcd5dxVouZIDl-pqJ489McnZq9qSfXnKLnVjpPyM
+
+### Create First User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "name": "Test",
+  "password": "Test123!@#",
+  "bio": "Test user for API testing"
+}
+
+### Create second user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "testuser2",
+  "name": "TestTwo",
+  "password": "Test456!@#",
+  "bio": "Second test user"
+}
+
+### Test User Creation Validation
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "t",
+  "name": "Test",
+  "password": "weak"
+}
+
+### Get all users
+GET {{baseUrl}}/users
+
+### Get Specific User
+GET {{baseUrl}}/users/6717458867f8bc83bb5c2d9c
+
+### Login with Valid Credentials
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "reeucqq",
+  "password": "Jind@1234"
+}
+
+### Test Invalid Login
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "password": "wrongpassword"
+}
+
+### Create Emotion Log
+POST {{baseUrl}}/emotionlogs
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "primaryEmotion": "Happy",
+  "secondaryEmotion": "Excited",
+  "emotionIntensity": 5,
+  "emotionDuration": 2,
+  "triggers": ["Achievement", "Good News"],
+  "physicalSensations": ["Racing Heart"],
+  "dailyActivities": ["Work/Study", "Exercise"],
+  "location": "Home",
+  "peopleInvolved": ["Family", "Friends"],
+  "overallDayRating": 8,
+  "reflection": "Had a great day with significant achievements",
+  "gratitude": "Grateful for support from family and friends"
+}
+
+### Get all Emotion Logs
+GET {{baseUrl}}/emotionlogs
+Authorization: Bearer {{authToken}}
+
+### Get Specific Emotion Log
+GET {{baseUrl}}/emotionlogs/67175871ef1a7dbe77b1ff09
+Authorization: Bearer {{authToken}}
+
+### Update Emotion Log
+PUT {{baseUrl}}/emotionlogs/67175871ef1a7dbe77b1ff09
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "primaryEmotion": "Happy",
+  "emotionIntensity": 6,
+  "emotionDuration": 3,
+  "triggers": ["Achievement", "Good News", "Recognition"],
+  "overallDayRating": 9,
+  "reflection": "Updated reflection on the day"
+}
+
+### Test Validation Errors
+POST {{baseUrl}}/emotionlogs
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "primaryEmotion": "Invalid_Emotion",
+  "emotionIntensity": 10,
+  "emotionDuration": 25,
+  "triggers": [],
+  "overallDayRating": 11
+}
+
+### Delete Emotion Log
+DELETE {{baseUrl}}/emotionlogs/67175871ef1a7dbe77b1ff09
+Authorization: Bearer {{authToken}}
+
+### Test Authentication Error
+GET {{baseUrl}}/emotionlogs
+Authorization: Bearer invalidtoken123
+
+### Access Non-Existent Resource
+GET {{baseUrl}}/emotionlogs/nonexistentid
+Authorization: Bearer {{authToken}}
+
+### Create Duplicate User
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "testuser1",
+  "name": "Test",
+  "password": "Test123!@#"
+}
+
+### Missing Required Fields
+POST {{baseUrl}}/emotionlogs
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "primaryEmotion": "Happy",
+  "emotionIntensity": 5
+}
+
+### Get Emotion Distribution
+GET {{baseUrl}}/analytics/distribution
+Authorization: Bearer {{authToken}}
+
+### Get Trigger Analysis
+GET {{baseUrl}}/analytics/triggers
+Authorization: Bearer {{authToken}}
+
+### Get Daily Patterns and Activity Impact
+GET {{baseUrl}}/analytics/patterns
+Authorization: Bearer {{authToken}}
+
+### Get Wellness Insights
+GET {{baseUrl}}/analytics/wellness
+Authorization: Bearer {{authToken}}
+
+### Get Comprehensive Activity Analysis
+GET {{baseUrl}}/analytics/activities
+Authorization: Bearer {{authToken}}
+
+### Generate Test Data
+POST {{baseUrl}}/analytics/generate-test-data
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "id": "6748c87a865c05d08a494063"
+}
