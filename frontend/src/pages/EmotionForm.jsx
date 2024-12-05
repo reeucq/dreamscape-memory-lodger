@@ -11,6 +11,7 @@ import {
   Smile,
   X,
 } from "lucide-react";
+import { toast, Toaster } from "react-hot-toast";
 
 // Constants for form options
 const EMOTION_OPTIONS = [
@@ -40,16 +41,16 @@ const PHYSICAL_SENSATIONS = [
 ];
 
 const DAILY_ACTIVITIES = [
-  "Work/Study",
+  "Work / Study",
   "Exercise",
   "Socializing",
-  "Leisure/Hobbies",
+  "Leisure / Hobbies",
   "Household Chores",
   "Sleep",
   "Other",
 ];
 
-const LOCATIONS = ["Home", "Work", "School/University", "Outside", "Other"];
+const LOCATIONS = ["Home", "Work", "School / University", "Outside", "Other"];
 
 // Add a utility function for error handling
 const getErrorMessage = (error) => {
@@ -98,7 +99,7 @@ const TagInput = ({
       e.preventDefault();
       const trimmedInput = input.trim();
 
-      if (!trimmedInput) {
+      if (!trimmedInput || trimmedInput.length === 0) {
         return;
       }
 
@@ -159,6 +160,7 @@ const TagInput = ({
 };
 
 const EmotionForm = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [errors, setErrors] = useState([]);
   const [formData, setFormData] = useState({
@@ -176,6 +178,11 @@ const EmotionForm = () => {
     gratitude: "",
   });
 
+  // Add scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setErrors([]);
@@ -190,11 +197,13 @@ const EmotionForm = () => {
   const goToNextStep = () => {
     setErrors([]); // Clear errors when moving to next step
     setCurrentStep((prev) => prev + 1);
+    scrollToTop();
   };
 
   const goToPreviousStep = () => {
     setErrors([]); // Clear errors when moving to previous step
     setCurrentStep((prev) => prev - 1);
+    scrollToTop();
   };
 
   const handleArrayInput = (name, value) => {
@@ -238,50 +247,51 @@ const EmotionForm = () => {
     return [errors.length === 0, errors];
   };
 
+  // Modify submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const [isValid, errors] = validateForm();
+    const [isValid, validationErrors] = validateForm();
     if (!isValid) {
-      setErrors(errors);
+      setErrors(validationErrors);
       return;
     }
 
+    if (isSubmitting) return; // Prevent multiple submissions
+    setIsSubmitting(true);
+
     try {
-      // Get token from localStorage
       const token = window.localStorage.getItem("loggedInUser")
         ? JSON.parse(window.localStorage.getItem("loggedInUser")).token
         : null;
 
       if (!token) {
-        alert("You must be logged in to submit an emotion log");
+        toast.error("You must be logged in to submit an emotion log");
         return;
       }
 
       const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
       };
 
-      // Clean up the formData before sending
       const submitData = {
         ...formData,
-        // Ensure arrays are not empty
         triggers: formData.triggers.filter((t) => t.trim()),
         physicalSensations: formData.physicalSensations.filter((s) => s.trim()),
         dailyActivities: formData.dailyActivities.filter((a) => a.trim()),
         peopleInvolved: formData.peopleInvolved.filter((p) => p.trim()),
-        // Convert numeric strings to numbers
         emotionIntensity: Number(formData.emotionIntensity),
         emotionDuration: Number(formData.emotionDuration),
         overallDayRating: Number(formData.overallDayRating),
-        // Trim text fields
         reflection: formData.reflection.trim(),
         gratitude: formData.gratitude.trim(),
       };
 
-      await axios.post("/api/emotionlogs", submitData, config);
+      await toast.promise(axios.post("/api/emotionlogs", submitData, config), {
+        loading: "Saving your emotion log...",
+        success: "Emotion log saved successfully!",
+        error: "Failed to save emotion log",
+      });
 
       // Reset form after successful submission
       setFormData({
@@ -299,12 +309,14 @@ const EmotionForm = () => {
         gratitude: "",
       });
 
+      setErrors([]);
       setCurrentStep(0);
-      alert("Emotion log submitted successfully!");
+      scrollToTop();
     } catch (error) {
-      console.error("Error submitting form:", error);
       const errorMessage = getErrorMessage(error);
       setErrors([errorMessage]);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -328,12 +340,12 @@ const EmotionForm = () => {
                     target: { name: "primaryEmotion", value: emotion },
                   })
                 }
-                className={`p-4 border-2 border-omori-black shadow-omori hover:bg-omori-red/20 transition-colors
-                          ${
-                            formData.primaryEmotion === emotion
-                              ? "bg-omori-red text-white"
-                              : "bg-white"
-                          }`}
+                className={`p-4 border-2 border-omori-black shadow-omori transition-colors
+                  ${
+                    formData.primaryEmotion === emotion
+                      ? "bg-omori-red text-white"
+                      : "bg-white hover:bg-omori-red/20 active:bg-omori-red/20 focus:bg-omori-red/20"
+                  }`}
               >
                 {emotion}
               </button>
@@ -355,12 +367,12 @@ const EmotionForm = () => {
                     target: { name: "secondaryEmotion", value: emotion },
                   })
                 }
-                className={`p-4 border-2 border-omori-black shadow-omori hover:bg-omori-red/20 transition-colors
-                          ${
-                            formData.secondaryEmotion === emotion
-                              ? "bg-omori-red text-white"
-                              : "bg-white"
-                          }`}
+                className={`p-4 border-2 border-omori-black shadow-omori transition-colors
+                  ${
+                    formData.secondaryEmotion === emotion
+                      ? "bg-omori-red text-white"
+                      : "bg-white hover:bg-omori-red/20 active:bg-omori-red/20 focus:bg-omori-red/20"
+                  }`}
               >
                 {emotion}
               </button>
@@ -449,12 +461,12 @@ const EmotionForm = () => {
                 onClick={() =>
                   handleArrayInput("physicalSensations", sensation)
                 }
-                className={`p-3 border-2 border-omori-black shadow-omori hover:bg-omori-red/20 transition-colors
-                          ${
-                            formData.physicalSensations.includes(sensation)
-                              ? "bg-omori-red text-white"
-                              : "bg-white"
-                          }`}
+                className={`p-3 border-2 border-omori-black shadow-omori transition-colors
+                  ${
+                    formData.physicalSensations.includes(sensation)
+                      ? "bg-omori-red text-white"
+                      : "bg-white hover:bg-omori-red/20 active:bg-omori-red/20 focus:bg-omori-red/20"
+                  }`}
               >
                 {sensation}
               </button>
@@ -479,12 +491,12 @@ const EmotionForm = () => {
                 key={activity}
                 type="button"
                 onClick={() => handleArrayInput("dailyActivities", activity)}
-                className={`p-3 border-2 border-omori-black shadow-omori hover:bg-omori-red/20 transition-colors
-                          ${
-                            formData.dailyActivities.includes(activity)
-                              ? "bg-omori-red text-white"
-                              : "bg-white"
-                          }`}
+                className={`p-3 border-2 border-omori-black shadow-omori transition-colors
+                  ${
+                    formData.dailyActivities.includes(activity)
+                      ? "bg-omori-red text-white"
+                      : "bg-white hover:bg-omori-red/20 active:bg-omori-red/20 focus:bg-omori-red/20"
+                  }`}
               >
                 {activity}
               </button>
@@ -502,12 +514,12 @@ const EmotionForm = () => {
                 onClick={() =>
                   handleChange({ target: { name: "location", value: loc } })
                 }
-                className={`p-3 border-2 border-omori-black shadow-omori hover:bg-omori-red/20 transition-colors
-                          ${
-                            formData.location === loc
-                              ? "bg-omori-red text-white"
-                              : "bg-white"
-                          }`}
+                className={`p-3 border-2 border-omori-black shadow-omori transition-colors
+                  ${
+                    formData.location === loc
+                      ? "bg-omori-red text-white"
+                      : "bg-white hover:bg-omori-red/20 active:bg-omori-red/20 focus:bg-omori-red/20"
+                  }`}
               >
                 {loc}
               </button>
@@ -552,6 +564,9 @@ const EmotionForm = () => {
           />
           <div className="flex justify-between  mt-2">
             <span>Poor</span>
+            <span className="font-medium">
+              Rating: {formData.overallDayRating}
+            </span>
             <span>Excellent</span>
           </div>
         </div>
@@ -604,6 +619,7 @@ const EmotionForm = () => {
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
+      <Toaster position="top-center" />
       {errors.length > 0 && (
         <div className="p-4 mb-4 border border-red-500 bg-red-100 text-red-700">
           <ul className="list-disc pl-5">
@@ -653,10 +669,13 @@ const EmotionForm = () => {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="px-6 py-2 bg-omori-blue text-white border-2 border-omori-black shadow-omori 
-             hover:bg-omori-red transition-colors"
+                disabled={isSubmitting}
+                className={`px-6 py-2 bg-omori-blue text-white border-2 border-omori-black 
+                shadow-omori transition-colors ${
+                  isSubmitting ? "opacity-50" : "hover:bg-omori-red"
+                }`}
               >
-                Submit Entry
+                {isSubmitting ? "Submitting..." : "Submit Entry"}
               </button>
             ) : (
               <button

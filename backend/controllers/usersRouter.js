@@ -44,15 +44,36 @@ usersRouter.get('/:id', async (req, res) => {
 });
 
 // Route to update a user by their ID
+// Route to update a user by their ID
 usersRouter.put('/:id', async (req, res) => {
-  const { username, name, profilePicture, bio } = req.body;
+  const { username, name, profilePicture, bio, password } = req.body;
+
+  // Create update object
+  const updateData = {
+    username,
+    name,
+    profilePicture,
+    bio,
+  };
+
+  // If password is provided, hash it and add to update
+  if (password) {
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!strongPasswordRegex.test(password)) {
+      return res.status(400).json({
+        error:
+          'Password is not strong enough. It must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character.',
+      });
+    }
+    updateData.passwordHash = await bcrypt.hash(password, 10);
+  }
 
   // Find the user and update their details
-  const updatedUser = await User.findByIdAndUpdate(
-    req.params.id,
-    { username, name, profilePicture, bio },
-    { new: true, runValidators: true }
-  );
+  const updatedUser = await User.findByIdAndUpdate(req.params.id, updateData, {
+    new: true,
+    runValidators: true,
+  });
 
   if (updatedUser) {
     res.json(updatedUser);

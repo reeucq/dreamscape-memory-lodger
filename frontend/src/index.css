@@ -14,3 +14,22 @@ body {
   font-family: "Omori", sans-serif;
   font-size: larger;
 }
+
+@layer utilities {
+  /* Remove hover effects on mobile */
+  @media (hover: none) {
+    .hover\:bg-omori-red\/20:hover {
+      background-color: transparent;
+    }
+  }
+
+  /* Ensure proper contrast when button is touched */
+  .active\:bg-omori-red\/20:active {
+    background-color: rgb(239 68 68 / 0.2);
+  }
+
+  /* Handle focus state */
+  .focus\:bg-omori-red\/20:focus {
+    background-color: rgb(239 68 68 / 0.2);
+  }
+}
