@@ -36,21 +36,53 @@ const PHYSICAL_SENSATIONS = [
   "Fatigue",
   "Sweating",
   "Racing Heart",
+  "Muscle Tension",
+  "Dizziness",
+  "Nausea",
+  "Shortness of Breath",
+  "Trembling",
+  "Hot or Cold Flashes",
+  "Stomach Pain",
+  "Sleep Issues",
+  "Loss of Appetite",
   "None",
   "Other",
 ];
 
 const DAILY_ACTIVITIES = [
-  "Work / Study",
+  "Work",
+  "Study",
   "Exercise",
   "Socializing",
-  "Leisure / Hobbies",
+  "Leisure",
+  "Hobbies",
   "Household Chores",
   "Sleep",
+  "Self Care",
+  "Meditation",
+  "Eating",
+  "Commuting",
+  "Caregiving",
+  "Shopping",
+  "Healthcare",
   "Other",
 ];
 
-const LOCATIONS = ["Home", "Work", "School / University", "Outside", "Other"];
+const LOCATIONS = [
+  "Home",
+  "Work",
+  "School",
+  "University",
+  "Friend's Place",
+  "Outside",
+  "Gym",
+  "Restaurant or Cafe",
+  "Shopping Center",
+  "Medical Facility",
+  "Transit",
+  "Nature",
+  "Other",
+];
 
 // Add a utility function for error handling
 const getErrorMessage = (error) => {

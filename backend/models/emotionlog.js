@@ -94,6 +94,15 @@ const emotionLogSchema = new mongoose.Schema(
             'Fatigue',
             'Sweating',
             'Racing Heart',
+            'Muscle Tension',
+            'Dizziness',
+            'Nausea',
+            'Shortness of Breath',
+            'Trembling',
+            'Hot or Cold Flashes',
+            'Stomach Pain',
+            'Sleep Issues',
+            'Loss of Appetite',
             'None',
             'Other',
           ];
@@ -114,12 +123,21 @@ const emotionLogSchema = new mongoose.Schema(
       validate: {
         validator: (v) => {
           const predefinedActivities = [
-            'Work/Study',
+            'Work',
+            'Study',
             'Exercise',
             'Socializing',
-            'Leisure/Hobbies',
+            'Leisure',
+            'Hobbies',
             'Household Chores',
             'Sleep',
+            'Self Care',
+            'Meditation',
+            'Eating',
+            'Commuting',
+            'Caregiving',
+            'Shopping',
+            'Healthcare',
             'Other',
           ];
           // Allow either predefined activities or free text
@@ -142,8 +160,16 @@ const emotionLogSchema = new mongoose.Schema(
           const predefinedLocations = [
             'Home',
             'Work',
-            'School/University',
+            'School',
+            'University',
+            "Friend's Place",
             'Outside',
+            'Gym',
+            'Restaurant or Cafe',
+            'Shopping Center',
+            'Medical Facility',
+            'Transit',
+            'Nature',
             'Other',
           ];
           // Allow either predefined locations or valid free text

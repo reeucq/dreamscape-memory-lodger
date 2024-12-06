@@ -73,20 +73,39 @@ const Dashboard = () => {
           .sort((a, b) => b - a);
 
         if (sortedDates.length > 0) {
-          let lastDate = new Date(sortedDates[0]);
-          currentStreak = 1;
+          // Convert dates to date strings (YYYY-MM-DD format) to handle multiple entries per day
+          const uniqueDates = [
+            ...new Set(
+              sortedDates.map((date) => date.toISOString().split("T")[0])
+            ),
+          ];
 
-          for (let i = 1; i < sortedDates.length; i++) {
-            const currentDate = new Date(sortedDates[i]);
-            const diffDays = Math.floor(
-              (lastDate - currentDate) / (1000 * 60 * 60 * 24)
-            );
+          const today = new Date().toISOString().split("T")[0];
+          const mostRecentDate = uniqueDates[0];
 
-            if (diffDays === 1) {
-              currentStreak++;
-              lastDate = currentDate;
-            } else {
-              break;
+          // Check if the streak is current (either logged today or yesterday)
+          const todayOrYesterday =
+            mostRecentDate === today ||
+            mostRecentDate ===
+              new Date(Date.now() - 86400000).toISOString().split("T")[0];
+
+          if (todayOrYesterday) {
+            currentStreak = 1; // Start counting from 1 for the most recent day
+
+            // Check consecutive days
+            for (let i = 0; i < uniqueDates.length - 1; i++) {
+              const currentDate = new Date(uniqueDates[i]);
+              const nextDate = new Date(uniqueDates[i + 1]);
+
+              const diffDays = Math.round(
+                (currentDate - nextDate) / (1000 * 60 * 60 * 24)
+              );
+
+              if (diffDays === 1) {
+                currentStreak++;
+              } else {
+                break;
+              }
             }
           }
         }
